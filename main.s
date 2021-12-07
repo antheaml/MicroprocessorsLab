@@ -1,6 +1,6 @@
 #include <xc.inc>
 
-extrn	DAC_Setup, DAC_Int_Hi, delay, delay2, ledSetup, nurse_alert, setup_lcd
+extrn	DAC_Setup, DAC_Int_Hi, ledSetup, nurse_alert, setup_lcd
 
 psect	code, abs
 	

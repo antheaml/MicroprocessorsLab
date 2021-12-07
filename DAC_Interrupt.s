@@ -1,6 +1,6 @@
 #include <xc.inc>
 	
-global	DAC_Setup, DAC_Int_Hi, delay, delay2
+global	DAC_Setup, DAC_Int_Hi
         
 psect udata_acs
 delay_counter1:	    ds 1
@@ -67,5 +67,5 @@ DAC_Setup:
 ;	bsf	GIE		; Enable all interrupts
 ;	return
 	
-	end
+end
 
