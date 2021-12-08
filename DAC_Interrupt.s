@@ -1,6 +1,8 @@
 #include <xc.inc>
 	
 global	DAC_Setup, DAC_Int_Hi
+    
+extrn	nurse_fall, nurse_alert, nurse_remote_disable
         
 psect udata_acs
 delay_counter1:	    ds 1
@@ -11,13 +13,16 @@ psect	dac_code, class=CODE
 DAC_Int_Hi:	
 	btfss	RBIF		; check that this is RB interrupt
 	retfie	f		; if not then return
-	movlw	0xff
-	movwf	PORTE, A
- 	movlw	0xff
-	movwf	delay_counter1
-	call	delay
-	movlw	0x00
-	movwf	PORTE, A
+	
+	call	nurse_fall
+	
+;	movlw	0xff
+;	movwf	PORTE, A
+; 	movlw	0xff
+;	movwf	delay_counter1, A
+;	call	delay
+;	movlw	0x00
+;	movwf	PORTE, A
 	bcf	RBIF		; clear interrupt flag
 	retfie	f		; fast return from interrupt
 
@@ -67,5 +72,5 @@ DAC_Setup:
 ;	bsf	GIE		; Enable all interrupts
 ;	return
 	
-end
+
 
