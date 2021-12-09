@@ -18,9 +18,9 @@ LCD_RS	EQU 4	; LCD register select bit
 psect	lcd_code,class=CODE
     
 LCD_Setup:
-	clrf    LATB, A
+	clrf    LATB, A								;****
 	movlw   11000000B	    ; RB0:5 all outputs
-	movwf	TRISB, A
+	movwf	TRISB, A 								;****
 	movlw   40
 	call	LCD_delay_ms	; wait 40ms for LCD to start up properly
 	movlw	00110000B	; Function set 4-bit
@@ -62,13 +62,13 @@ LCD_Send_Byte_I:	    ; Transmits byte stored in W to instruction reg
 	movwf   LCD_tmp, A
 	swapf   LCD_tmp, W, A   ; swap nibbles, high nibble goes first
 	andlw   0x0f	    ; select just low nibble
-	movwf   LATB, A	    ; output data bits to LCD
-	bcf	LATB, LCD_RS, A	; Instruction write clear RS bit
+	movwf   LATB, A	    ; output data bits to LCD								;****
+	bcf	LATB, LCD_RS, A	; Instruction write clear RS bit								;****
 	call    LCD_Enable  ; Pulse enable Bit 
 	movf	LCD_tmp, W, A   ; swap nibbles, now do low nibble
 	andlw   0x0f	    ; select just low nibble
-	movwf   LATB, A	    ; output data bits to LCD
-	bcf	LATB, LCD_RS, A	; Instruction write clear RS bit
+	movwf   LATB, A	    ; output data bits to LCD								;****
+	bcf	LATB, LCD_RS, A	; Instruction write clear RS bit								;****
         call    LCD_Enable  ; Pulse enable Bit 
 	return
 
@@ -76,13 +76,13 @@ LCD_Send_Byte_D:	    ; Transmits byte stored in W to data reg
 	movwf   LCD_tmp, A
 	swapf   LCD_tmp, W, A	; swap nibbles, high nibble goes first
 	andlw   0x0f	    ; select just low nibble
-	movwf   LATB, A	    ; output data bits to LCD
-	bsf	LATB, LCD_RS, A	; Data write set RS bit
+	movwf   LATB, A	    ; output data bits to LCD								;****
+	bsf	LATB, LCD_RS, A	; Data write set RS bit								;****
 	call    LCD_Enable  ; Pulse enable Bit 
 	movf	LCD_tmp, W, A	; swap nibbles, now do low nibble
 	andlw   0x0f	    ; select just low nibble
-	movwf   LATB, A	    ; output data bits to LCD
-	bsf	LATB, LCD_RS, A	; Data write set RS bit	    
+	movwf   LATB, A	    ; output data bits to LCD								;****
+	bsf	LATB, LCD_RS, A	; Data write set RS bit	    								;****
         call    LCD_Enable  ; Pulse enable Bit 
 	movlw	10	    ; delay 40us
 	call	LCD_delay_x4us
@@ -97,7 +97,7 @@ LCD_Enable:	    ; pulse enable bit LCD_E for 500ns
 	nop
 	nop
 	nop
-	bsf	LATB, LCD_E, A	    ; Take enable high
+	bsf	LATB, LCD_E, A	    ; Take enable high								;****
 	nop
 	nop
 	nop
@@ -105,14 +105,14 @@ LCD_Enable:	    ; pulse enable bit LCD_E for 500ns
 	nop
 	nop
 	nop
-	bcf	LATB, LCD_E, A	    ; Writes data to LCD
+	bcf	LATB, LCD_E, A	    ; Writes data to LCD								;****
 	return
     
 ; ** a few delay routines below here as LCD timing can be quite critical ****
 LCD_delay_ms:		    ; delay given in ms in W
 	movwf	LCD_cnt_ms, A
-lcdlp2:	movlw	250	    ; 1 ms delay
-	call	LCD_delay_x4us	
+lcdlp2:	movlw	1;250	    ; 1 ms delay
+	;call	LCD_delay_x4us	
 	decfsz	LCD_cnt_ms, A
 	bra	lcdlp2
 	return
@@ -136,7 +136,6 @@ lcdlp1:	decf 	LCD_cnt_l, F, A	; no carry when 0x00 -> 0xff
 	return			; carry reset so return
 
 
-end	
 
 
 

@@ -13,8 +13,7 @@ int_hi:	org	0x0008	; high vector, no low vector,
 globalSetup:	
 	call	DAC_Setup
 	call	ledSetup
-	call	setup_lcd
-	;call	nurse_alert ; for testing
+	call	nurse_alert ; for testing
 	;call	nurse_fall ; for testing
 	goto	$	; Sit in infinite loop
 

@@ -35,7 +35,7 @@ check_alert_button:
     call    nurse_alert
     
 check_disable_button:
-    movlw   0b00000111
+    movlw   0b000001111
     CPFSEQ  alert_code, A ; alert code is the code sent from the client to nurse, if alert_code = 2, will call nurse_fall, else will return
     return
     call    nurse_remote_disable
