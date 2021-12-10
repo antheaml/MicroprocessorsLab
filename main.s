@@ -1,18 +1,34 @@
 #include <xc.inc>
 
-extrn	SPI_MasterInit, SPI_MasterTransmit
-
+extrn	SPI_MasterInit, SPI_MasterTransmit, SPI_MasterRead, UART_Setup, UART_Transmit_Byte;, read_byte1
+    
 psect	code, abs
 	
 rst:	org	0x0000	; reset vector
-	goto	main
+	goto	setup
 
-main:
+setup:
     bsf	    TRISB, 0, A
+    bcf	    CFGS	; point to Flash program memory  
+    bsf	    EEPGD 	; access Flash program memory
+    call    UART_Setup	; setup UART
+main:
     call    SPI_MasterInit
-    call    sending_data
+    ;call    sending_data
+    call    test_read
     goto    $
-    
+
+   
+test_read:
+    ;################# CHIP_ID address 0x00 but MSB = 1 (Read)
+    bcf	    PORTE, 0, A		; pull CSB low - start message
+;    movlw   0b10000000	; chip id
+    movlw   0b10000011	; pmu status
+    call    SPI_MasterRead
+    ;movff   read_byte1, WREG   
+    call    UART_Transmit_Byte
+    bsf	    PORTE, 0, A		; pull CSB high - stop message
+    return
     
 sending_data:
     call    INT_EN

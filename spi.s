@@ -1,9 +1,10 @@
 #include <xc.inc>
     
-global	SPI_MasterInit, SPI_MasterTransmit
+global	SPI_MasterInit, SPI_MasterTransmit, SPI_MasterRead;, read_byte1
 
-psect	spi_data
-    ds	read_byte1: 1
+;psect	spi_data
+;read_byte1: ds	1
+    
 psect	spi_code, class=CODE
     
 SPI_MasterInit:	; Set Clock edge to negative
@@ -33,6 +34,8 @@ SPI_MasterRead:
 Wait_Read:	; Wait for transmission + read to complete 
 	btfss 	SSP2IF		; check interrupt flag to see if data has been sent
 	bra 	Wait_Read
-	movff	SSP2BUF, read_byte1, A	    ; load SSP2BUF to read_byte1
+	;movff	SSP2BUF, read_byte1, A	    ; load SSP2BUF to read_byte1
+	movff	SSP2BUF, WREG, A
 	bcf 	SSP2IF		; clear interrupt flag
+	;send read_byte1 to uart
 	return
