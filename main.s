@@ -1,21 +1,22 @@
 #include <xc.inc>
 
-extrn	DAC_Setup, DAC_Int_Hi, ledSetup, nurse_alert, setup_lcd
+extrn	spi_setup
 
 psect	code, abs
 	
 rst:	org	0x0000	; reset vector
 	goto	globalSetup
 
-int_hi:	org	0x0008	; high vector, no low vector,
-	goto	DAC_Int_Hi
-	
-globalSetup:	
-	call	DAC_Setup
-	call	ledSetup
-	call	setup_lcd
-	;call	nurse_alert ; for testing
-	;call	nurse_fall ; for testing
+
+;int_hi:	org	0x0008	; high vector, no low vector,
+;	goto	DAC_Int_Hi
+;	
+globalSetup:
+;	movlw	0b11111111
+;	movwf	TRISB
+;	movlw	0b00000000
+;	movwf	PORTB
+	call	spi_setup
 	goto	$	; Sit in infinite loop
 
 end	rst
