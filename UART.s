@@ -1,6 +1,7 @@
 #include <xc.inc>
     
 global  UART_Setup, UART_Transmit_Byte
+extrn	read_byte1
 
 psect	uart_code,class=CODE
 UART_Setup:
@@ -16,8 +17,10 @@ UART_Setup:
     return
 
 UART_Transmit_Byte:	    ; Transmits byte stored in W
-;    btfss   TX1IF	    ; TX1IF is set when TXREG1 is empty
-;    bra	    UART_Transmit_Byte
+    btfss   TX1IF	    ; TX1IF is set when TXREG1 is empty
+    bra	    UART_Transmit_Byte
+    ;movlw   0b11111111
+    movff   read_byte1, WREG, A
     movwf   TXREG1, A
     return
 

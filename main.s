@@ -22,8 +22,8 @@ main:
 test_read:
     ;################# CHIP_ID address 0x00 but MSB = 1 (Read)
     bcf	    PORTE, 0, A		; pull CSB low - start message
-;    movlw   0b10000000	; chip id
-    movlw   0b10000011	; pmu status
+    movlw   0b10000000	; chip id
+;    movlw   0b10000011	; pmu status
     call    SPI_MasterRead
     ;movff   read_byte1, WREG   
     call    UART_Transmit_Byte
