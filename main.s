@@ -14,7 +14,7 @@ setup:
     call    UART_Setup	; setup UART
 main:
     call    SPI_MasterInit
-    ;call    sending_data
+    ;call    sending_data ; Use correct idle time (bunch of NOPs right now)
     call    test_read
     goto    $
 
@@ -23,6 +23,7 @@ test_read:
     ;################# CHIP_ID address 0x00 but MSB = 1 (Read)
     bcf	    PORTE, 0, A		; pull CSB low - start message
     movlw   0b10000000	; chip id
+    ;movlw   0b10101010
 ;    movlw   0b10000011	; pmu status
     call    SPI_MasterRead
     ;movff   read_byte1, WREG   
@@ -44,7 +45,56 @@ INT_EN:
     call    SPI_MasterTransmit
     movlw   0b00000000
     call    SPI_MasterTransmit
-    bsf	    PORTE, 0, A		; pull CSB high - stop message
+    bsf	    PORTE, 0, A
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    ; pull CSB high - stop message
     ;################# INT_EN[1]
     bcf	    PORTE, 0, A		; pull CSB low - start message
     movlw   0x51
@@ -52,6 +102,14 @@ INT_EN:
     movlw   0b00001111
     call    SPI_MasterTransmit
     bsf	    PORTE, 0, A		; pull CSB high - stop message
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
     ;################# INT_EN[2]
     bcf	    PORTE, 0, A		; pull CSB low - start message
     movlw   0x52
@@ -59,6 +117,14 @@ INT_EN:
     movlw   0b00000000
     call    SPI_MasterTransmit
     bsf	    PORTE, 0, A		; pull CSB high - stop message
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
     return
 
 INT_OUT_CTRL:
@@ -69,6 +135,14 @@ INT_OUT_CTRL:
     movlw   0b00001010
     call    SPI_MasterTransmit
     bsf	    PORTE, 0, A		; pull CSB high - stop message
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
     return
     
     
@@ -80,6 +154,14 @@ INT_MAP:
     movlw   0b11111111
     call    SPI_MasterTransmit
     bsf	    PORTE, 0, A		; pull CSB high - stop message
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
     ;################# INT_MAP[1]
     bcf	    PORTE, 0, A		; pull CSB low - start message
     movlw   0x56
@@ -87,6 +169,14 @@ INT_MAP:
     movlw   0b11110000
     call    SPI_MasterTransmit
     bsf	    PORTE, 0, A		; pull CSB high - stop message
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
     ;################# INT_MAP[2]
     bcf	    PORTE, 0, A		; pull CSB low - start message
     movlw   0x57
@@ -94,6 +184,14 @@ INT_MAP:
     movlw   0b00000000
     call    SPI_MasterTransmit
     bsf	    PORTE, 0, A		; pull CSB high - stop message
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
     return
     
 	
