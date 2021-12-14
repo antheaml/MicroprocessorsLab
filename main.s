@@ -31,6 +31,9 @@ test_read:
     ;movlw   0b10101010
     ;movlw   0b10000011	; pmu status
     call    SPI_MasterTransmit
+    call    NOP_delay
+    call    NOP_delay
+    call    NOP_delay
     movlw   0b00000000 ; so we don't write anything while trying to read
     call    SPI_MasterRead
     bsf	    PORTE, 0, A		; pull CSB high - end message
