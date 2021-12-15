@@ -11,9 +11,9 @@ rst:	org	0x0000	; reset vector
 int_hi:	org	0x0008	; High priority interrupt
 	goto	DAC_Int_Hi
 	
-clientSetup:	
+Client_Int_Hi:	
 	call	Client_Interrupt_Setup ; Set up interrupt
-	;call	Client_Led_Setup ; Set up LEDs NEED TO WRITE
+	call	Client_Led_Setup ; Set up LEDs NEED TO WRITE
 	call	client_imuSetup
 	goto	$	; Sit in infinite loop
 

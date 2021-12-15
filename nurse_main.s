@@ -12,11 +12,11 @@ int_hi:	org	0x0008	; high priority interrupt
 	goto	Nurse_Int_Hi
 	
 nurse_setup:
-    bsf	    TRISB, 0, A		    ; why?
+    bsf	    TRISB, 0, A		    ; make interrupts input
     bcf	    CFGS		    ; point to Flash program memory  
     bsf	    EEPGD		    ; access Flash program memory
     call    nurse_ledSetup	    ; set up lEDs
-    call    setup_lcd		    ; set up lcd including uart for lcd
+    ;call    setup_lcd		    ; set up lcd including uart for lcd
     call    Nurse_Interrupt_Setup   ; set up interrupt pins for nurse
     goto    main
 

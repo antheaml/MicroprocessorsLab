@@ -1,12 +1,13 @@
 #include <xc.inc>
     
-global	SPI_MasterInit, SPI_MasterTransmit, SPI_MasterRead ;, read_byte1
+global	client_imuSetup
 
 ;;;; code to set up the IMU
     
 psect	spi_code, class=CODE
     
 client_imuSetup:
+    call    SPI_MasterInit
     call    INT_EN
     call    INT_OUT_CTRL
     call    INT_MAP
@@ -15,35 +16,35 @@ client_imuSetup:
 
 INT_EN: ; Instructions sent to configure INT_EN register of IMU
     ;################# INT_EN[0]
-    bcf	    PORTE, 0, A		; pull CSB low - start message
+    bcf	    PORTD, 3, A		; pull CSB low - start message
     movlw   0x50 ; IF WE EVER WANT TO READ, CHANGE MSB TO 1 
     call    SPI_MasterTransmit
     movlw   0b00000000
     call    SPI_MasterTransmit
-    bsf	    PORTE, 0, A    
+    bsf	    PORTD, 3, A    
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
     ; pull CSB high - stop message
     ;################# INT_EN[1]
-    bcf	    PORTE, 0, A		; pull CSB low - start message
+    bcf	    PORTD, 3, A		; pull CSB low - start message
     movlw   0x51
     call    SPI_MasterTransmit
     movlw   0b00001111 
     call    SPI_MasterTransmit
-    bsf	    PORTE, 0, A		; pull CSB high - stop message
+    bsf	    PORTD, 3, A		; pull CSB high - stop message
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
     ;################# INT_EN[2]
-    bcf	    PORTE, 0, A		; pull CSB low - start message
+    bcf	    PORTD, 3, A		; pull CSB low - start message
     movlw   0x52
     call    SPI_MasterTransmit
     movlw   0b00000000
     call    SPI_MasterTransmit
-    bsf	    PORTE, 0, A		; pull CSB high - stop message
+    bsf	    PORTD, 3, A		; pull CSB high - stop message
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
@@ -52,12 +53,12 @@ INT_EN: ; Instructions sent to configure INT_EN register of IMU
 
 INT_OUT_CTRL: ; Instructions sent to configure INT_OUT_CTRL register of IMU
     ;################# INT_OUT_CTRL
-    bcf	    PORTE, 0, A		; pull CSB low - start message
+    bcf	    PORTD, 3, A		; pull CSB low - start message
     movlw   0x53
     call    SPI_MasterTransmit
     movlw   0b10100000
     call    SPI_MasterTransmit
-    bsf	    PORTE, 0, A		; pull CSB high - stop message
+    bsf	    PORTD, 3, A		; pull CSB high - stop message
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
@@ -67,34 +68,34 @@ INT_OUT_CTRL: ; Instructions sent to configure INT_OUT_CTRL register of IMU
     
 INT_MAP: ; Instructions sent to configure INT_MAP register of IMU
     ;################# INT_MAP[0]
-    bcf	    PORTE, 0, A		; pull CSB low - start message
+    bcf	    PORTD, 3, A		; pull CSB low - start message  CSB = RD3
     movlw   0x55 ; IF WE EVER WANT TO READ, CHANGE MSB TO 1 
     call    SPI_MasterTransmit
     movlw   0b00000000;0b11111111; 0b00000000
     call    SPI_MasterTransmit
-    bsf	    PORTE, 0, A		; pull CSB high - stop message
+    bsf	    PORTD, 3, A		; pull CSB high - stop message
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
     ;################# INT_MAP[1]
-    bcf	    PORTE, 0, A		; pull CSB low - start message
+    bcf	    PORTD, 3, A		; pull CSB low - start message
     movlw   0x56
     call    SPI_MasterTransmit
     movlw   0b00000000;0b11110000; 
     call    SPI_MasterTransmit
-    bsf	    PORTE, 0, A		; pull CSB high - stop message
+    bsf	    PORTD, 3, A		; pull CSB high - stop message
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
     ;################# INT_MAP[2]
-    bcf	    PORTE, 0, A		; pull CSB low - start message
+    bcf	    PORTD, 3, A		; pull CSB low - start message
     movlw   0x57
     call    SPI_MasterTransmit
     movlw   0b00000001;0b00000000 ; 0b00000001
     call    SPI_MasterTransmit
-    bsf	    PORTE, 0, A		; pull CSB high - stop message
+    bsf	    PORTD, 3, A		; pull CSB high - stop message
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
@@ -103,57 +104,57 @@ INT_MAP: ; Instructions sent to configure INT_MAP register of IMU
       
 INT_LOWHIGH: ; Instructions sent to configure INT_LOWHIGH register of IMU
     ;################# INT_LOWHIGH[0] - delay time 
-    bcf	    PORTE, 0, A		; pull CSB low - start message
+    bcf	    PORTD, 3, A		; pull CSB low - start message
     movlw   0x5A ;
     call    SPI_MasterTransmit
     movlw   0b00000001 ;							     NEEDS TESTING
     call    SPI_MasterTransmit
-    bsf	    PORTE, 0, A		; pull CSB high - stop message
+    bsf	    PORTD, 3, A		; pull CSB high - stop message
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
     ;################# INT_LOWHIGH[1] - threshold definition
-    bcf	    PORTE, 0, A		; pull CSB low - start message
+    bcf	    PORTD, 3, A		; pull CSB low - start message
     movlw   0x5B
     call    SPI_MasterTransmit
     movlw   0b00000011 ;							     NEEDS TESTING
     call    SPI_MasterTransmit
-    bsf	    PORTE, 0, A		; pull CSB high - stop message
+    bsf	    PORTD, 3, A		; pull CSB high - stop message
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
     ;################# INT_LOWHIGH[2]
-    bcf	    PORTE, 0, A		; pull CSB low - start message
+    bcf	    PORTD, 3, A		; pull CSB low - start message
     movlw   0x5C
     call    SPI_MasterTransmit
     movlw   0b00000001 ;							     NEEDS TESTING
     call    SPI_MasterTransmit
-    bsf	    PORTE, 0, A		; pull CSB high - stop message
+    bsf	    PORTD, 3, A		; pull CSB high - stop message
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
     ; Don't know if we need to write to these registers or not
     ;################# INT_LOWHIGH[3] - delay time for high g interrupt 
-    bcf	    PORTE, 0, A		; pull CSB low - start message
+    bcf	    PORTD, 3, A		; pull CSB low - start message
     movlw   0x5D
     call    SPI_MasterTransmit
     movlw   0b00000000 ;							      
     call    SPI_MasterTransmit
-    bsf	    PORTE, 0, A		; pull CSB high - stop message
+    bsf	    PORTD, 3, A		; pull CSB high - stop message
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
     ;################# INT_LOWHIGH[4] - threshold for high g interrupt 
-    bcf	    PORTE, 0, A		; pull CSB low - start message
+    bcf	    PORTD, 3, A		; pull CSB low - start message
     movlw   0x5D
     call    SPI_MasterTransmit
     movlw   0b00000000 ;							      
     call    SPI_MasterTransmit
-    bsf	    PORTE, 0, A		; pull CSB high - stop message
+    bsf	    PORTD, 3, A		; pull CSB high - stop message
     call    NOP_delay
     call    NOP_delay
     call    NOP_delay
@@ -196,8 +197,8 @@ SPI_MasterInit:	; Set Clock edge to negative
 	bcf	TRISC, PORTC_SCK1_POSN, A	; SCK2 output
 	;bsf	TRISC, PORTC_SDI1_POSN, A
 	;######### added by us
-	bcf	TRISE, 0, A
-	bsf	PORTE, 0, A
+	bcf	TRISD, 3, A ;; think this is right? changed E -> D for csb
+	bsf	PORTD, 3, A
 	;######### added by us
 	return
 

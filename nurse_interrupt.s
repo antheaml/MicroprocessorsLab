@@ -1,6 +1,6 @@
 #include <xc.inc>
     
-global	Nurse_Interrupt_Setup, nurse_ledSetup; 
+global	Nurse_Interrupt_Setup, nurse_ledSetup, Nurse_Int_Hi, nurse_fall, nurse_alert, nurse_remote_disable
 
 extrn	start_fall_lcd, start_alertButton_lcd, start_disable_lcd, setup_lcd
 
@@ -9,10 +9,7 @@ psect	nurse_int_code,class=CODE
 Nurse_Interrupt_Setup: ; used to be DAC_Setup
        ; need to rewrite and set up based on how the nurse is wired up
        movlw	0xFF
-       movwf	TRISB, A	; enable portB as inputs for interrupts
-       movlw	0x00
-       movwf	TRISE, A
-       movwf	PORTE, A	; make it an output
+       movwf	TRISB, A	; enable portB as inputs for interrupt
        bsf	RBIE		; Enable RB interrupt
        bsf	GIE		; Enable all interrupts
        return  
@@ -58,6 +55,7 @@ nurse_alert:
     movwf   PORTH, A ; triggers buzzer and alert LED
     bcf	    RBIE		; Disable RB interrupt for lcd
     bcf	    GIE
+    call    setup_lcd
     call    start_alertButton_lcd
     bsf	    RBIE		; Enable RB interrupt
     bsf	    GIE
@@ -70,6 +68,7 @@ nurse_remote_disable:
     movwf   PORTH, A
     bcf	    RBIE		; Disable RB interrupt for lcd
     bcf	    GIE
+    call    setup_lcd
     call    start_disable_lcd
     bsf	    RBIE		; Enable RB interrupt
     bsf	    GIE
