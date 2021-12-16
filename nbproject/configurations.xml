@@ -14,10 +14,12 @@
                    projectFiles="true">
       <itemPath>config.s</itemPath>
       <itemPath>spi.s</itemPath>
-      <itemPath>UART.s</itemPath>
-      <itemPath>client_main.s</itemPath>
-      <itemPath>client_spi.s</itemPath>
       <itemPath>nurse_main.s</itemPath>
+      <itemPath>nurse_LCD_setup_transmit.s</itemPath>
+      <itemPath>nurse_interrupt.s</itemPath>
+      <itemPath>nurse_lcd_main.s</itemPath>
+      <itemPath>nurse_uart_4_lcd.s</itemPath>
+      <itemPath>client_interrupts.s</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

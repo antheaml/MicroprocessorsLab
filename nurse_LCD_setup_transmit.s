@@ -48,6 +48,14 @@ LCD_Setup:
 	movlw	10		; wait 40us
 	call	LCD_delay_x4us
 	return
+	
+LCD_clear:
+	call	LCD_delay_ms
+	movlw	000000001B	; Assume RS = 0 alresdy, so don't need to define
+	call	LCD_Send_Byte_I
+	movlw	10		; wait 40us
+	call	LCD_delay_x4us
+	return
 
 LCD_Write_Message:	    ; Message stored at FSR2, length stored in W
 	movwf   LCD_counter, A

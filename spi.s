@@ -20,10 +20,6 @@ SPI_MasterInit:	; Set Clock edge to negative
 	bcf	TRISE, 0, A
 	bsf	PORTE, 0, A
 	;######### added by us
-	call	NOP_delay
-	call	NOP_delay
-	call	NOP_delay
-	call	NOP_delay
 	return
 
 SPI_MasterTransmit:  ; Start transmission of data (held in W)
