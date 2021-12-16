@@ -29,19 +29,19 @@ nurse_setup:
 polling_main: ; used to be main
     ; Nurse checks whether G pins are high
     ; Enable G0,1,2 as inputs
-    bcf	    PORTG, 0, A ; PORTG0:3 low
-    bcf	    PORTG, 1, A ;
-    bcf	    PORTG, 2, A
+    bcf	    PORTD, 0, A ; PORTG0:3 low
+    bcf	    PORTD, 1, A ;
+    bcf	    PORTD, 2, A
     
-    bsf	    TRISG, 0, A ; make PORTG0:3 inputs
-    bsf	    TRISG, 1, A
-    bsf	    TRISG, 2, A
+    bsf	    TRISD, 0, A ; make PORTG0:3 inputs
+    bsf	    TRISD, 1, A
+    bsf	    TRISD, 2, A
     
-    BTFSC   PORTG, 0, A ;bit test RG0, skip if clear
-    call    nurse_fall
-    BTFSC   PORTG, 1, A ;bit test RG1, skip if clear
+    BTFSC   PORTD, 1, A ;bit test RH7, skip if clear
     call    nurse_alert
-    BTFSC   PORTG, 2, A ;bit test RG2, skip if clear
+    BTFSC   PORTD, 0, A ;bit test RG0, skip if clear
+    call    nurse_fall
+    BTFSC   PORTD, 2, A ;bit test RG2, skip if clear
     call    nurse_remote_disable
     
     goto    polling_main
