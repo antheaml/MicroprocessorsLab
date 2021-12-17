@@ -1,22 +1,14 @@
 #include <xc.inc>
     
-global	Nurse_Interrupt_Setup, nurse_ledSetup, Nurse_Int_Hi, nurse_fall, nurse_alert, nurse_remote_disable
+global	nurse_ledSetup, Nurse_Int_Hi, nurse_fall, nurse_alert, nurse_remote_disable
 
 extrn	start_fall_lcd, start_alertButton_lcd, start_disable_lcd, setup_lcd
 
 psect	nurse_int_code,class=CODE
 
-Nurse_Interrupt_Setup: ; used to be DAC_Setup
-       ; need to rewrite and set up based on how the nurse is wired up
-;       movlw	0xFF
-;       movwf	TRISB, A	; enable portB as inputs for interrupt
-;       bsf	RBIE		; Enable RB interrupt
-;       bsf	GIE		; Enable all interrupts
-       return  
-
 nurse_ledSetup: 
     ; ---- Subroutine to set up ports controlling LEDs ----
-    movlw   0b11111100 ; RH0 and RH1 as output, RH0 = FALL LED, RH1 = ALERT BUTTON LED
+    movlw   0b11111000 ; RH0:2 as output
     movwf   TRISH, A 
     movlw   0b00000000 ; all PORTH LEDs off
     movwf   PORTH, A
@@ -37,41 +29,36 @@ Nurse_Int_Hi:	; used to be DAC_Int_Hi
 	retfie	f		; fast return from interrupt		
 	
 nurse_fall:
-    ; ---- Subroutine to control how nurse responds when client falls ----
-    movlw   0b00000001 ; need RH0 high, rest low, triggers buzzer and fall LED
-    movwf   PORTH, A
-    bcf	    RBIE		; Disable RB interrupt for lcd
-    bcf	    GIE
+    ; ---- Subroutine to control how nurse responds when client falls, so PORT D made high ----
+    bsf	    PORTH, 0 , A ; turn on led
     call    setup_lcd
     call    start_fall_lcd
-    bsf	    RBIE		; Enable RB interrupt
-    bsf	    GIE
+    bcf	    TRISD, 0, A ; enable as output
+    bsf	    PORTD, 0, A ; stop communication on this line
+    bsf	    TRISD, 0, A ; enable as input
     return
     
 nurse_alert:
     ; ---- Subroutine to control how nurse responds when client presses ----
     ; ----			  distress button		        ---- 
-    movlw   0b00000010 ; 
-    movwf   PORTH, A ; triggers buzzer and alert LED
-    bcf	    RBIE		; Disable RB interrupt for lcd
-    bcf	    GIE
+    bsf	    PORTH, 1, A ; turn on LED
     call    setup_lcd
     call    start_alertButton_lcd
-    bsf	    RBIE		; Enable RB interrupt
-    bsf	    GIE
+    bcf	    TRISD, 1, A ; enable as output
+    bsf	    PORTD, 1, A ; stop communication on this line
+    bsf	    TRISD, 1, A ; enable as input
     return
     
 nurse_remote_disable:
     ; ---- Subroutine to control how nurse responds when client presses ----
     ; ----			  disable button		        ---- 
-    movlw   0b00000100 ; all LEDs off, and buzzer off
-    movwf   PORTH, A
-    bcf	    RBIE		; Disable RB interrupt for lcd
-    bcf	    GIE
+    ;turn off other leds
+    ;turn on diable led
     call    setup_lcd
     call    start_disable_lcd
-    bsf	    RBIE		; Enable RB interrupt
-    bsf	    GIE
+    bcf	    TRISD, 2, A ; enable as output
+    bsf	    PORTD, 2, A ; stop communication on this line
+    bsf	    TRISD, 2, A ; enable as input
     return
 
 	

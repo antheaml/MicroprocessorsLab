@@ -19,7 +19,6 @@
       <itemPath>nurse_interrupt.s</itemPath>
       <itemPath>nurse_lcd_main.s</itemPath>
       <itemPath>nurse_uart_4_lcd.s</itemPath>
-      <itemPath>client_interrupts.s</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
