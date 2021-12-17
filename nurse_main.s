@@ -31,12 +31,13 @@ polling_main: ; used to be main
     ; Enable G0,1,2 as inputs
     bcf	    PORTD, 0, A ; PORTG0:3 low
     bcf	    PORTD, 1, A ;
-    bcf	    PORTD, 2, A
+    bsf	    PORTD, 2, A
+    bsf	    PORTH, 2, A
     
     bsf	    TRISD, 0, A ; make PORTG0:3 inputs
     bsf	    TRISD, 1, A
     bsf	    TRISD, 2, A
-    
+loop:   
     BTFSC   PORTD, 1, A ;bit test RH7, skip if clear
     call    nurse_alert
     BTFSC   PORTD, 0, A ;bit test RG0, skip if clear
@@ -44,7 +45,7 @@ polling_main: ; used to be main
     BTFSC   PORTD, 2, A ;bit test RG2, skip if clear
     call    nurse_remote_disable
     
-    goto    polling_main
+    bra    loop
     
     
 testing:
