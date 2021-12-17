@@ -1,7 +1,7 @@
 
 #include <xc.inc>
 
-extrn	nurse_ledSetup, setup_lcd, Nurse_Int_Hi
+extrn	nurse_ledSetup, setup_lcd
 extrn	SPI_MasterInit, SPI_MasterTransmit, SPI_MasterRead, read_byte1, NOP_delay
 extrn	nurse_fall, nurse_alert, nurse_remote_disable
 
@@ -11,8 +11,8 @@ psect	code, abs
 rst:	org	0x0000	; reset vector
 	goto	nurse_setup
 
-int_hi:	org	0x0008	; high priority interrupt
-	goto	Nurse_Int_Hi
+;int_hi:	org	0x0008	; high priority interrupt
+;	goto	Nurse_Int_Hi
 	
 nurse_setup:
     ;bsf	    TRISB, 0, A		    ; make interrupts input already done in Nurse_Interrupt_Setup 
@@ -23,27 +23,21 @@ nurse_setup:
     ;call    Nurse_Interrupt_Setup   ; set up interrupt pins for nurse
     ;call    Nurse_Int_Hi
     ;call    SPI_MasterInit
-    goto    polling_main
-
-    
-polling_main: ; used to be main
-    ; Nurse checks whether G pins are high
-    ; Enable G0,1,2 as inputs
-    ; enable port H as outputs
-    ; enable port Ds as inputs
     movlw   0b00000111
     movwf   TRISD, A  ;port d is input
     movlw   0x00
     movwf   TRISH, A ; port H as outputs
-loop:   
+    goto    polling_main
+
+    
+polling_main: ; used to be main 
     BTFSC   PORTD, 1, A ;bit test RH7, skip if clear
     call    nurse_alert
     BTFSC   PORTD, 0, A ;bit test RG0, skip if clear
     call    nurse_fall
     BTFSC   PORTD, 2, A ;bit test RG2, skip if clear
     call    nurse_remote_disable
-    bra    loop
-    
+    bra     polling_main
     
 testing:
     call    NOP_delay
