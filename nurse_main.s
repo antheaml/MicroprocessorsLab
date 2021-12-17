@@ -1,7 +1,7 @@
 
 #include <xc.inc>
 
-extrn	nurse_ledSetup, setup_lcd, Nurse_Interrupt_Setup, Nurse_Int_Hi
+extrn	nurse_ledSetup, setup_lcd, Nurse_Int_Hi
 extrn	SPI_MasterInit, SPI_MasterTransmit, SPI_MasterRead, read_byte1, NOP_delay
 extrn	nurse_fall, nurse_alert, nurse_remote_disable
 
@@ -29,14 +29,12 @@ nurse_setup:
 polling_main: ; used to be main
     ; Nurse checks whether G pins are high
     ; Enable G0,1,2 as inputs
-    bcf	    PORTD, 0, A ; PORTG0:3 low
-    bcf	    PORTD, 1, A ;
-    bsf	    PORTD, 2, A
-    bsf	    PORTH, 2, A
-    
-    bsf	    TRISD, 0, A ; make PORTG0:3 inputs
-    bsf	    TRISD, 1, A
-    bsf	    TRISD, 2, A
+    ; enable port H as outputs
+    ; enable port Ds as inputs
+    movlw   0b00000111
+    movwf   TRISD, A  ;port d is input
+    movlw   0x00
+    movwf   TRISH, A ; port H as outputs
 loop:   
     BTFSC   PORTD, 1, A ;bit test RH7, skip if clear
     call    nurse_alert
@@ -44,7 +42,6 @@ loop:
     call    nurse_fall
     BTFSC   PORTD, 2, A ;bit test RG2, skip if clear
     call    nurse_remote_disable
-    
     bra    loop
     
     
